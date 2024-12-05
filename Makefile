@@ -1,18 +1,30 @@
-CC = gcc
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall
+LDFLAGS = -lX11 -lcairo
 
-CFLAGS = -Wall -std=c++17
+SRC_DIR = src
+BUILD_DIR = build
 
-LIBS = -lX11 -lcairo
-
-TARGET = build/taskbar
+SRCS = $(wildcard $(SRC_DIR)/*/*.cpp)
+OBJS = $(patsubst $(SRC_DIR)/*/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
+TARGET = $(BUILD_DIR)/layout_example
 
 SRC = src/main.cpp
 
-$(TARGET): $(SRC)
-	$(CC) $(CFLAGS) $(SRC) -o $(TARGET) $(LIBS)
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	@mkdir -p $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) $(OBJS) $(SRC) -o $@ $(LDFLAGS)
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+
+run: $(TARGET)
+	./$(TARGET)
 
 clean:
-	rm -f build/$(TARGET)
-
-all: $(TARGET)
+	rm -rf $(BUILD_DIR)
 

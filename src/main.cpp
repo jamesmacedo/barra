@@ -3,6 +3,7 @@
 #include <cairo/cairo.h>
 #include <cairo/cairo-xlib.h>
 #include <stdio.h>
+#include "ui/ui.h"
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
@@ -32,33 +33,41 @@ void draw_taskbar(Display *display, Window window, int x, int y) {
     surface = cairo_xlib_surface_create(display, window, DefaultVisual(display, 0), WIDTH, HEIGHT);
     cr = cairo_create(surface);
 
-    cairo_set_source_rgb(cr, 0.1, 0.1, 0.1);
-    cairo_paint(cr);
+    Row row(0, 0, 10);
 
-    cairo_set_source_rgb(cr, 1, 1, 1); 
-    int rect_width = 200;
-
-    if (y == 29) {
-        rect_width += 100;
-        start_pos_x = x - rect_width / 2;
-        last_pos = x; 
-    } else {
-        start_pos_x = last_pos - rect_width / 2;
+    for (int i = 0; i < ARRAY_SIZE(options); i++) {
+        row.add(std::make_shared<Button>(100, HEIGHT, options[i]));
     }
 
-    cairo_rectangle(cr, start_pos_x, 0, rect_width, HEIGHT);
-    cairo_fill(cr);
+    row.draw(cr);
 
-    cairo_set_source_rgb(cr, 1, 1, 1); 
-    cairo_select_font_face(cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
-    cairo_set_font_size(cr, 10);
-
-    cairo_text_extents_t extends;
-
-    cairo_text_extents(cr, options[0], &extends);
-
-    int center_horizontal_alignment = (HEIGHT / 2) + extends.height / 2; 
-    cairo_move_to(cr, start_pos_x, center_horizontal_alignment);
+    // cairo_set_source_rgb(cr, 0.1, 0.1, 0.1);
+    // cairo_paint(cr);
+    //
+    // cairo_set_source_rgb(cr, 1, 1, 1); 
+    // int rect_width = 200;
+    //
+    // if (y == 29) {
+    //     rect_width += 100;
+    //     start_pos_x = x - rect_width / 2;
+    //     last_pos = x; 
+    // } else {
+    //     start_pos_x = last_pos - rect_width / 2;
+    // }
+    //
+    // cairo_rectangle(cr, start_pos_x, 0, rect_width, HEIGHT);
+    // cairo_fill(cr);
+    //
+    // cairo_set_source_rgb(cr, 1, 1, 1); 
+    // cairo_select_font_face(cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+    // cairo_set_font_size(cr, 10);
+    //
+    // cairo_text_extents_t extends;
+    //
+    // cairo_text_extents(cr, options[0], &extends);
+    //
+    // int center_horizontal_alignment = (HEIGHT / 2) + extends.height / 2; 
+    // cairo_move_to(cr, start_pos_x, center_horizontal_alignment);
 
     cairo_destroy(cr);
     cairo_surface_destroy(surface);
