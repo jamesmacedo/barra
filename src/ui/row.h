@@ -2,6 +2,7 @@
 #define ROW_H
 
 #include "./drawable.h"
+#include "../config.h"
 #include <vector>
 #include <memory>
 

@@ -7,7 +7,7 @@ BUILD_DIR = build
 
 SRCS = $(wildcard $(SRC_DIR)/*/*.cpp)
 OBJS = $(patsubst $(SRC_DIR)/*/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
-TARGET = $(BUILD_DIR)/layout_example
+TARGET = $(BUILD_DIR)/barra
 
 SRC = src/main.cpp
 

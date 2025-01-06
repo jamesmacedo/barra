@@ -5,6 +5,10 @@
 #include <stdio.h>
 #include "ui/ui.h"
 
+#include <iostream>
+
+using namespace std;
+
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
 long unsigned int HEIGHT = 30, WIDTH = 800; 
@@ -84,6 +88,7 @@ int main() {
     root = RootWindow(display, screen);
 
     WIDTH = DisplayWidth(display, screen);
+    cout << WIDTH << endl;
     int x = 0, y = DisplayHeight(display, screen) - HEIGHT;
 
     Window window = XCreateSimpleWindow(display, root, x, y, WIDTH, HEIGHT, 0,

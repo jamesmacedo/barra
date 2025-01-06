@@ -2,6 +2,7 @@
 #define DRAWABLE_H
 
 #include <cairo/cairo.h>
+#include <cairo/cairo-xlib.h>
 
 class BDrawable {
 public:
