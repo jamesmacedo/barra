@@ -23,7 +23,7 @@ public:
   };
 
   void draw(cairo_t *cr) override {
-    RsvgRectangle viewport = { 0, 0, width, height};
+    RsvgRectangle viewport = { x, y, width, height};
     if(!rsvg_handle_render_document(handle, cr, &viewport, &err)){
       std::cout << "Error trying to render SVG" << "\n";
       if(err) g_error_free(err);

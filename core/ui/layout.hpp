@@ -1,16 +1,18 @@
 #include "cairo.h"
 #include "widget.h"
+#include <cstdint>
 #include <vector>
 #include <memory>
 
-class Container : public Widget {
+class Layout : public Widget {
 protected:
   std::vector<std::shared_ptr<Widget>> children;
+  uint32_t width, height;
 
 public:
 
-  Container(double x = 0, double y = 0, uint32_t width = 0, uint32_t height = 0)
-      : Widget(x, y, width, height) {}
+  Layout(double x = 0, double y = 0, uint32_t width = 0, uint32_t height = 0)
+      : Widget(x, y, width, height), width(width), height(height) {}
 
   void add(std::shared_ptr<Widget> child){
     children.push_back(child);

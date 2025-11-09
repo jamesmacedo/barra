@@ -7,15 +7,18 @@
 #include <stdio.h>
 #include <xcb/xcb.h>
 #include <xcb/xproto.h>
+#include <glib.h>
 
-#include "core/ui/container.h"
-#include "core/ui/text.h"
-#include "core/ui/icon.h"
+#include "core/ui/layout.hpp"
+#include "core/widgets/clock.hpp"
 
 xcb_window_t root;
 xcb_window_t barra;
 xcb_connection_t *connection;
 xcb_screen_t *screen;
+
+cairo_surface_t *surface;
+cairo_t *cr;
 
 xcb_visualtype_t *get_visualtype(xcb_screen_t *screen) {
   xcb_depth_iterator_t depth_iter = xcb_screen_allowed_depths_iterator(screen);
@@ -31,8 +34,7 @@ xcb_visualtype_t *get_visualtype(xcb_screen_t *screen) {
   return NULL;
 }
 
-int main() {
-
+void setup() {
   connection = xcb_connect(NULL, NULL);
   if (xcb_connection_has_error(connection)) {
     std::cout << "Error trying to connect to X server" << std::endl;
@@ -54,40 +56,53 @@ int main() {
   xcb_map_window(connection, barra);
   xcb_flush(connection);
 
-  cairo_surface_t *surface;
-  cairo_t *cr;
-
   xcb_visualtype_t *visual = get_visualtype(screen);
 
   surface = cairo_xcb_surface_create(connection, barra, visual,
                                      screen->width_in_pixels, 30);
   cr = cairo_create(surface);
 
-  Container container = Container(0, 0, screen->width_in_pixels, 30);
+  xcb_map_window(connection, barra);
+  xcb_flush(connection);
+}
 
-  // auto horario = std::make_shared<Text>(cr, "19:46");
-  // container.add(horario);
+void draw() {
 
-  auto gear = std::make_shared<Icon>("/home/nemo/grafico/barra/assets/gear.svg", 20, 20);
-  container.add(gear);
+  std::cout << "desenhando tudo" << std::endl;
+  Layout layout = Layout(0, 0, screen->width_in_pixels, 30);
+  // auto gear =
+  
 
-  container.draw(cr);
+  auto clock = std::make_shared<Clock>(cr);
+  layout.add(clock);
+  layout.draw(cr);
+
+  xcb_flush(connection);
+}
+
+void loop() {
+  xcb_generic_event_t *event;
+  while (true) {
+    while ((event = xcb_poll_for_event(connection))) {
+      uint8_t response_type = event->response_type & ~0x80;
+      switch (response_type) {
+      case XCB_KEY_PRESS:
+        std::cout << "Key pressed" << std::endl;
+        break;
+      }
+    }
+    draw();
+    usleep(16000);
+  }
+}
+
+int main() {
+
+  setup();
+  loop();
 
   cairo_destroy(cr);
   cairo_surface_destroy(surface);
-
-  xcb_map_window(connection, barra);
-  xcb_flush(connection);
-
-  xcb_generic_event_t *event;
-  while ((event = xcb_wait_for_event(connection))) {
-    uint8_t response_type = event->response_type & ~0x80;
-    switch (response_type) {
-    case XCB_KEY_PRESS:
-      std::cout << "Key pressed" << std::endl;
-      break;
-    }
-  }
 
   return 0;
 }
