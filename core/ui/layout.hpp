@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include <memory>
+#include "core/utils/image.hpp"
 
 class Layout : public Widget {
 protected:

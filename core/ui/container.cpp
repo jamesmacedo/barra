@@ -1,4 +1,5 @@
 #include "./container.hpp"
+#include "core/utils/image.hpp"
 
 int global_padding = 3;
 
@@ -31,7 +32,7 @@ void Container::draw_background(cairo_t *cr) {
 }
 
 void Container::draw(cairo_t *cr) {
-  auto [r, g, b] = rgb_to_cairo(255, 0, 0);
+  auto [r, g, b] = apply(rgb_to_cairo, color);
   cairo_set_source_rgb(cr, r, g, b);
 
   draw_background(cr);

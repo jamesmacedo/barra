@@ -7,7 +7,7 @@ fs = import('python')
 
 src = include_directories('core')
 
-cpp_files = run_command('find', '.', '-name', '*.cpp', '!', '-name', 'barra.cpp').stdout().strip().split('\n')
+cpp_files = run_command('find', '.', '-not', '-path', './build/*', '-name', '*.cpp', '!', '-name', 'barra.cpp').stdout().strip().split('\n')
 
 srcs = files('barra.cpp')
 foreach f : cpp_files
@@ -19,6 +19,8 @@ xcb = dependency('xcb', required: true)
 # xcb_keysyms = dependency('xcb-keysyms', required: true)
 cairo = dependency('cairo', required: true)
 svg = dependency('librsvg-2.0', required: true)
+dbus = dependency('sdbus-c++', required: true)
+opencv = dependency('opencv4', required: true)
 # cairo_xcb = dependency('cairo', required: true)
 
 executable('barra', srcs,
@@ -26,7 +28,9 @@ executable('barra', srcs,
   dependencies: [
     xcb, 
     cairo,
-    svg
+    svg,
+    dbus,
+    opencv
   ],
   install: false
 )

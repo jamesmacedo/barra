@@ -11,10 +11,6 @@ class Widget {
 protected:
   double x, y, width, height;
   std::shared_ptr<Widget> child;
-  std::tuple<double, double, double> rgb_to_cairo(uint8_t r, uint8_t g,
-                                                  uint8_t b) {
-    return {(double)r / 255, (double)g / 255, (double)b / 255};
-  }
 
 public:
   Widget(std::shared_ptr<Widget>child)

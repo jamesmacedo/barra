@@ -11,6 +11,7 @@
 
 #include "core/ui/layout.hpp"
 #include "core/widgets/clock.hpp"
+#include "core/widgets/media.hpp"
 
 xcb_window_t root;
 xcb_window_t barra;
@@ -70,11 +71,13 @@ void draw() {
 
   std::cout << "desenhando tudo" << std::endl;
   Layout layout = Layout(0, 0, screen->width_in_pixels, 30);
-  // auto gear =
-  
 
-  auto clock = std::make_shared<Clock>(cr);
-  layout.add(clock);
+  // auto clock = std::make_shared<Clock>(cr);
+  // layout.add(clock);
+
+  auto media = std::make_shared<Media>(cr);
+  layout.add(media);
+
   layout.draw(cr);
 
   xcb_flush(connection);
