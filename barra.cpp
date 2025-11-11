@@ -68,8 +68,6 @@ void setup() {
 }
 
 void draw() {
-
-  std::cout << "desenhando tudo" << std::endl;
   Layout layout = Layout(0, 0, screen->width_in_pixels, 30);
 
   // auto clock = std::make_shared<Clock>(cr);

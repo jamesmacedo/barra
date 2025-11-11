@@ -10,13 +10,9 @@
 Clock::Clock(cairo_t *cr) {
 
   time_text = std::make_shared<Text>(cr, "00:00");
-
-  std::vector<std::shared_ptr<Widget>> children = {
-    std::make_shared<Icon>("/home/nemo/grafico/barra/assets/clock.svg", 15, 15),
-    time_text
-  };
-
-  auto container = std::make_shared<Container>(children, 2);
+  auto container = std::make_shared<Container>(2, 2);
+  container->add(std::make_shared<Icon>("/home/nemo/grafico/barra/assets/clock.svg", 15, 15));
+  container->add(time_text);
   set_child(container);
 };
 

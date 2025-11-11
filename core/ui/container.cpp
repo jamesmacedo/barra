@@ -3,23 +3,25 @@
 
 int global_padding = 3;
 
-Container::Container(std::vector<std::shared_ptr<Widget>> children,
-                     double padding, double spacing)
-    : Widget(padding, padding, 0, 0), children(children), spacing(spacing) {
+Container::Container() {};
 
+Container::Container(double padding, double spacing)
+    : Widget(padding, padding, 0, 0), spacing(spacing) {}
+
+void Container::update_topology(){
   for (auto &child : children) {
     width += child->get_width();
   }
   // height = floor(avarage_height / children.size());
-  width += (global_padding+8) * 2 + (spacing * children.size());
+  std::cout << width << '\n';
   height = 30 - (global_padding * 2);
   this->set_size(width, height);
 }
 
-Container::Container() {};
-
 void Container::add(std::shared_ptr<Widget> child) {
+  child->set_parent(this);
   children.push_back(child);
+  update_topology();
 }
 
 void Container::draw_background(cairo_t *cr) {
@@ -38,7 +40,7 @@ void Container::draw(cairo_t *cr) {
   draw_background(cr);
   cairo_fill(cr);
 
-  int offset_x = global_padding + 8;
+  int offset_x = x + global_padding + 8;
 
   for (auto &child : children) {
     child->set_position(offset_x, y + (height - child->get_height()) / 2);

@@ -1,6 +1,8 @@
 #include "media.hpp"
+#include <memory>
 #include <tuple>
 #include "core/utils/image.hpp"
+#include "core/ui/marquee.cpp"
 
 enum Status {
     Paused,
@@ -8,11 +10,26 @@ enum Status {
     Playing
 };
 
+Media::Media(cairo_t *cr) {
+
+  text = std::make_shared<Text>(cr, "");
+  icon = std::make_shared<Icon>("/home/nemo/grafico/barra/assets/play.svg", 15, 15);
+
+  auto marquee = std::make_shared<Marquee>(text);
+
+  background = std::make_shared<Container>(2, 4);
+
+  background->add(icon); 
+  background->add(text); 
+
+  set_child(background);
+};
+
 tuple<string, string> Media::get_current_media(){
 
     auto dbus_connection = createSessionBusConnection();
 
-    const string playerService = "org.mpris.MediaPlayer2.firefox.instance_1_108";
+    const string playerService = "org.mpris.MediaPlayer2.firefox.instance_1_106";
     const string playerPath = "/org/mpris/MediaPlayer2";
     const string playerInterface = "org.mpris.MediaPlayer2.Player";
 
@@ -44,6 +61,8 @@ tuple<string, string> Media::get_current_media(){
                 string cover = metadata.at("mpris:artUrl").get<string>();
                 cover.erase(0, 7);
                 auto rgb = load_image(cover);
+                icon->set_color(make_tuple(255 - std::get<0>(rgb), 255 - std::get<1>(rgb), 255 - std::get<2>(rgb)));
+                text->set_color(make_tuple(255 - std::get<0>(rgb), 255 - std::get<1>(rgb), 255 - std::get<2>(rgb)));
                 background->set_color(rgb);
                 return {title, cover};
             }
@@ -55,18 +74,6 @@ tuple<string, string> Media::get_current_media(){
         exit(1);
     }
 }
-
-Media::Media(cairo_t *cr) {
-
-  text = std::make_shared<Text>(cr, "Nothing playing...");
-
-  std::vector<std::shared_ptr<Widget>> children = {
-    text 
-  };
-
-  background = std::make_shared<Container>(children, 2);
-  set_child(background);
-};
 
 void Media::draw(cairo_t *cr){
     auto [title, cover] = this->get_current_media();

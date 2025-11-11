@@ -3,16 +3,23 @@
 #include <cairo/cairo.h>
 #include <cstdint>
 #include <memory>
-#include <tuple>
 #include <iostream>
+#include <tuple>
+
+using namespace std;
 
 class Widget {
 
 protected:
   double x, y, width, height;
   std::shared_ptr<Widget> child;
+  Widget* parent;
+  tuple<uint8_t, uint8_t, uint8_t> color = make_tuple(255, 255, 0);
 
 public:
+  Widget(tuple<uint8_t, uint8_t, uint8_t> color)
+      : color(color) {}
+
   Widget(std::shared_ptr<Widget>child)
       : child(child) {}
 
@@ -21,8 +28,13 @@ public:
 
   virtual ~Widget() = default;
 
+  void set_parent(Widget* p) { parent = p; }
+  virtual void update_topology(){};
+
   virtual void draw(cairo_t *cr) = 0;
+  virtual void set_color(tuple<uint8_t, uint8_t, uint8_t> c){ color = c;};
   virtual void set_position(double nx, double ny) {
+
 
     std::cout << "new x: " << nx << "new y:" << ny << '\n';
     x = nx;

@@ -1,6 +1,7 @@
 #include "core/ui/text.hpp"
 #include "core/ui/container.hpp"
 #include "core/ui/widget.h"
+#include "core/ui/icon.h"
 #include <cairo/cairo.h>
 #include <sdbus-c++/sdbus-c++.h>
 #include <string>
@@ -19,6 +20,7 @@ public:
 private:
   tuple<string, string> get_current_media();
   shared_ptr<Text> text;
+  shared_ptr<Icon> icon;
   shared_ptr<Container> background;
   string current_title;
 };

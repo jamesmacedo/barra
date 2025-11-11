@@ -26,8 +26,12 @@ public:
     cairo_rectangle(cr, 0, 0, width, height);
     cairo_fill(cr);
 
+    int offset_x = 50;
+
     for (auto& child : children){
+      child->set_position(offset_x, 30/2);
       child->draw(cr);
+      offset_x = offset_x + child->get_width() + 3;
     }
   }
 };
