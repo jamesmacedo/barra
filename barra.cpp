@@ -12,6 +12,7 @@
 #include "core/ui/layout.hpp"
 #include "core/widgets/clock.hpp"
 #include "core/widgets/media.hpp"
+#include "core/config.h"
 
 xcb_window_t root;
 xcb_window_t barra;
@@ -49,7 +50,7 @@ void setup() {
 
   xcb_create_window(
       connection, XCB_COPY_FROM_PARENT, barra, screen->root, 0, 0,
-      screen->width_in_pixels, 30, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
+      screen->width_in_pixels, BAR_HEIGHT, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
       screen->root_visual, XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK,
       (uint32_t[]){screen->white_pixel,
                    XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_KEY_PRESS});
@@ -60,7 +61,7 @@ void setup() {
   xcb_visualtype_t *visual = get_visualtype(screen);
 
   surface = cairo_xcb_surface_create(connection, barra, visual,
-                                     screen->width_in_pixels, 30);
+                                     screen->width_in_pixels, BAR_HEIGHT);
   cr = cairo_create(surface);
 
   xcb_map_window(connection, barra);
@@ -68,13 +69,13 @@ void setup() {
 }
 
 void draw() {
-  Layout layout = Layout(0, 0, screen->width_in_pixels, 30);
+  auto layout = Layout(0, 0, screen->width_in_pixels, BAR_HEIGHT, 3, 5);
 
-  // auto clock = std::make_shared<Clock>(cr);
-  // layout.add(clock);
+  auto clock = std::make_shared<Clock>(cr);
+  layout.add(clock);
 
-  auto media = std::make_shared<Media>(cr);
-  layout.add(media);
+  // auto media = std::make_shared<Media>(cr);
+  // layout.add(media);
 
   layout.draw(cr);
 

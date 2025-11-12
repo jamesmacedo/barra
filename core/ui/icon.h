@@ -11,6 +11,7 @@ private:
   std::string path;
   RsvgHandle *handle;
   GError *err = NULL;
+  tuple<uint8_t, uint8_t, uint8_t> color = make_tuple(0, 0, 0);
 
 public:
   Icon(std::string p, double width, double  height) : Widget(0, 0, width, height), path(p){
@@ -25,7 +26,7 @@ public:
   };
 
   void draw(cairo_t *cr) override {
-    RsvgRectangle viewport = { x, y, width, height};
+    RsvgRectangle viewport = { this->get_x(), this->get_y(), width, height};
     cairo_save(cr);
     cairo_push_group_with_content(cr, CAIRO_CONTENT_ALPHA);
     if(!rsvg_handle_render_document(handle, cr, &viewport, &err)){
@@ -43,5 +44,8 @@ public:
     cairo_pattern_destroy(alpha);
     cairo_restore(cr);
   }
-  
+  virtual void layout() override {
+
+  };
+  void set_color(tuple<uint8_t, uint8_t, uint8_t> c){ color = c;};
 };

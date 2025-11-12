@@ -1,15 +1,8 @@
 #include "text.hpp"
 #include "utils/image.hpp"
+#include <complex>
 
-Text::Text(cairo_t *cr, const std::string &c): Widget(make_tuple(0, 0, 0)), content(c){
-  cairo_text_extents_t extents;
-  cairo_set_font_size(cr, 15);
-  cairo_text_extents(cr, c.c_str(), &extents);
-  width = extents.width;
-  // height = extents.height + (0 - extents.y_bearing);
-  height = height - y_bearing;
-  y_bearing = extents.y_bearing;
-};
+Text::Text(){};
 
 void Text::set_content(cairo_t *cr, const std::string &c) {
   cairo_text_extents_t extents;
@@ -18,11 +11,15 @@ void Text::set_content(cairo_t *cr, const std::string &c) {
   height = extents.height;
   y_bearing = extents.y_bearing;
   content = c;
-  parent->update_topology();
+}
+
+void Text::layout(){
+  if(!dirty) return;
 }
 
 void Text::draw(cairo_t *cr) {
-  cairo_move_to(cr, x, y - y_bearing);
+  layout();
+  cairo_move_to(cr, this->get_x(), this->get_y() - y_bearing);
   cairo_set_font_size(cr, 15);
   auto [r, g, b] = std::apply(rgb_to_cairo, color);
   cairo_set_source_rgb(cr, r, g, b);

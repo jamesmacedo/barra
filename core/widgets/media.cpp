@@ -12,15 +12,17 @@ enum Status {
 
 Media::Media(cairo_t *cr) {
 
-  text = std::make_shared<Text>(cr, "");
+  text = std::make_shared<Text>();
   icon = std::make_shared<Icon>("/home/nemo/grafico/barra/assets/play.svg", 15, 15);
 
-  auto marquee = std::make_shared<Marquee>(text);
+  // auto marquee = std::make_shared<Marquee>(text);
 
   background = std::make_shared<Container>(2, 4);
 
   background->add(icon); 
   background->add(text); 
+
+  text->set_content(cr, "testandoooo");
 
   set_child(background);
 };
@@ -29,7 +31,7 @@ tuple<string, string> Media::get_current_media(){
 
     auto dbus_connection = createSessionBusConnection();
 
-    const string playerService = "org.mpris.MediaPlayer2.firefox.instance_1_106";
+    const string playerService = "org.mpris.MediaPlayer2.firefox.instance_1_105";
     const string playerPath = "/org/mpris/MediaPlayer2";
     const string playerInterface = "org.mpris.MediaPlayer2.Player";
 
@@ -76,9 +78,9 @@ tuple<string, string> Media::get_current_media(){
 }
 
 void Media::draw(cairo_t *cr){
-    auto [title, cover] = this->get_current_media();
-    if(title != ""){
-        text->set_content(cr, title.c_str());
-    }
+    // auto [title, cover] = this->get_current_media();
+    // if(title != ""){
+    //     text->set_content(cr, title.c_str());
+    // }
     child->draw(cr);
 }

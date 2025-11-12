@@ -22,10 +22,10 @@ public:
     // update();
     // cairo_save(cr);
 
-    // cairo_rectangle(cr, this->get_x(), this->get_y(), child->get_width(), child->get_height());
+    // cairo_rectangle(cr, this->get_parent()->get_x(), this->get_parent()->get_y(), child->get_width(), child->get_height());
     // cairo_clip(cr);
-    //
-    // cairo_move_to(cr, this->get_x() + x_scroll, this->get_y() - child->get_y_bearing());
+    // 
+    // cairo_move_to(cr, this->get_parent()->get_x() + x_scroll, this->get_parent()->get_y() - child->get_y_bearing());
     child->draw(cr);
 
     // cairo_restore(cr);
